@@ -52,7 +52,7 @@ export class AppComponent {
       }
     } else {
       for (const t of this._tiempos.tiempos_activos) {
-        this._tiempos.agregar(t)
+        this._tiempos.actualizar(t)
       }
     }
   }
@@ -64,7 +64,7 @@ export class AppComponent {
       }
     } else {
       for (const t of this._defectos.defectos_activos) {
-        this._defectos.agregar(t)
+        this._defectos.actualizar(t)
       }
     }
   }
@@ -94,7 +94,7 @@ export class AppComponent {
   }
   obtenerTipo(a: string) {
     if (!a) return { inicio: '0000-00-00', termino: '0000-00-00' }
-    const tipo = this._tiempos.tiempos_activos.find(t => t.fase.toLowerCase() == a.toLowerCase())
+    const tipo = this._tiempos.tiempos_activos.find(t => t.fase == a)
     return tipo ? tipo : { inicio: '0000-00-00', termino: '0000-00-00' }
   }
 }

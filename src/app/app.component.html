@@ -1,21 +1,390 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/cli">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12 mt-3 mb-3">
+      <div class="form-inline my-2 my-lg-0">
+        <select class="custom-select my-2 my-sm-0" #selectProyecto (change)="goChange(selectProyecto.value)">
+          <option selected>Selecciona para limpiar</option>
+          <option *ngFor="let p of _proyectos.proyectos" [value]="p._id">{{p.programa}}</option>
+        </select>
+        <button class="btn btn-success my-2 my-sm-0" (click)="goFormulario(_proyectos.proyecto_activo)"
+          data-toggle="modal" data-target="#proyectoModal" type="button"><span
+            *ngIf="_proyectos.proyecto_activo._id">Actualizar</span>
+          <span *ngIf="!_proyectos.proyecto_activo._id">Agregar</span></button>
+        <!-- <button class="btn btn-info  my-2 my-sm-0" (click)="goLimpiar()" type="button">Limpiar</button> -->
+        <button *ngIf="_proyectos.proyecto_activo._id" class="btn btn-danger  my-2 my-sm-0"
+          (click)="goEliminar(_proyectos.proyecto_activo)" type="button">Eliminar</button>
+      </div>
+    </div>
+  </div>
 
-<router-outlet></router-outlet>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="proyectoModal" tabindex="-1" role="dialog" aria-labelledby="proyectoModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="proyectoModalLabel"> <span *ngIf="_proyectos.proyecto_activo._id">Actualizar</span>
+          <span *ngIf="!_proyectos.proyecto_activo._id">Agregar</span> </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form class="modal-body" (submit)="onSubmit(formProyecto)" #formProyecto="ngForm">
+        <div class="col-12 form-group">
+          <input id="estudiante" required class="form-control form-control-sm" maxlength="40"
+            [(ngModel)]="_proyectos.proyecto_activo.estudiante" name="estudiante" #estudiante="ngModel"
+            placeholder="Nombre del estudiante..." type="text">
+        </div>
+        <div class="col-12 form-group">
+          <input id="programa" required class="form-control form-control-sm" maxlength="30"
+            [(ngModel)]="_proyectos.proyecto_activo.programa" name="programa" #programa="ngModel"
+            placeholder="Nombre del programa..." type="text">
+        </div>
+        <div class="col-12 form-group">
+          <input id="instructor" required class="form-control form-control-sm" maxlength="40"
+            [(ngModel)]="_proyectos.proyecto_activo.instructor" name="instructor" #instructor="ngModel"
+            placeholder="Nombre del instructor..." type="text">
+        </div>
+        <div class="col-12 form-group">
+          <input id="fecha" required class="form-control form-control-sm" [(ngModel)]="_proyectos.proyecto_activo.fecha"
+            name="fecha" #fecha="ngModel" placeholder="Fecha..." type="date">
+        </div>
+        <div class="col-12 form-group">
+          <input id="noPrograma" required class="form-control form-control-sm"
+            [(ngModel)]="_proyectos.proyecto_activo.noPrograma" name="noPrograma" #noPrograma="ngModel"
+            placeholder="Numero del programa..." type="number">
+        </div>
+        <div class="col-12 form-group">
+          <input id="lenguaje" required class="form-control form-control-sm" maxlength="40"
+            [(ngModel)]="_proyectos.proyecto_activo.lenguaje" name="lenguaje" #lenguaje="ngModel"
+            placeholder="Lenguaje..." type="text">
+        </div>
+        <div class="col-12 form-group">
+          <input id="lenguaje" required class="form-control form-control-sm" maxlength="40"
+            [(ngModel)]="_proyectos.proyecto_activo.estimado" name="estimado" #estimado="ngModel"
+            placeholder="Tiempo estimado..." type="text">
+        </div>
+      </form>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" (click)="onSubmit(formProyecto)">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Tabs -->
+<div class="container-fluid">
+
+  <div class="row">
+    <div class="col-12" *ngIf="_proyectos.proyecto_activo._id; else noSeleccionado">
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="tiempos-tab" data-toggle="tab" href="#tiempos" role="tab"
+            aria-controls="tiempos" aria-selected="true">Tiempos PSP</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="defectos-tab" data-toggle="tab" href="#defectos" role="tab" aria-controls="defectos"
+            aria-selected="false">Defectos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="resumen-tab" data-toggle="tab" href="#resumen" role="tab" aria-controls="resumen"
+            aria-selected="false">Resumen</a>
+        </li>
+      </ul>
+      <div class="tab-content" id="myTabContent">
+        <!-- Tab de  Tiempos -->
+        <div class="tab-pane fade show active" id="tiempos" role="tabpanel" aria-labelledby="tiempos-tab">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <button class="btn btn-info" (click)="_tiempos.agregar_activo()">Agregar Tiempo</button>
+                <button class="btn btn-success my-2 my-lg-0" (click)="guardarTiempos()">Guardar tiempos</button>
+              </div>
+              <div class="col-12">
+                <div class="table-responsive-sm">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Proyecto</th>
+                        <th scope="col">Fase</th>
+                        <th scope="col">Inicio</th>
+                        <th scope="col">Termino</th>
+                        <th scope="col">Tiempo int.</th>
+                        <th scope="col">Tiempo delta</th>
+                        <th scope="col">Comentarios</th>
+                        <th scope="col">Acción</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let t of _tiempos.tiempos_activos">
+                        <th scope="row">
+                          {{_proyectos.proyecto_activo.programa}}
+                        </th>
+                        <th>
+                          <select class="custom-select" [(ngModel)]="t.fase" name="fase" required>
+                            <option selected>Seleccione uno</option>
+                            <option value="Planificacion">Planificacion</option>
+                            <option value="Diseño">Diseño</option>
+                            <option value="Codificacion">Codificacion</option>
+                            <option value="Compilacion">Compilacion</option>
+                            <option value="Pruebas">Pruebas</option>
+                            <option value="Posmortem">Posmortem</option>
+                          </select>
+                        </th>
+                        <th>
+                          <input required class="form-control form-control-sm"
+                            (blur)="calculaDelta(t._id,t.inicio,t.termino)" [(ngModel)]="t.inicio" name="inicio"
+                            placeholder="Fecha y hora de inicio..." type="datetime-local">
+                        </th>
+                        <th>
+                          <input required class="form-control form-control-sm"
+                            (blur)="calculaDelta(t._id,t.inicio,t.termino)" [(ngModel)]="t.termino" name="termino"
+                            placeholder="Fecha y hora de termino..." type="datetime-local">
+                        </th>
+                        <th>
+                          <input required class="form-control form-control-sm"
+                            (blur)="calculaDelta(t._id,t.inicio,t.termino)" [(ngModel)]="t.tiempo_interupcion"
+                            name="tiempo_interupcion" placeholder="Tiempo de interrupcion en minutos..." type="number">
+                        </th>
+                        <th>
+                          {{t.tiempo_delta}}
+                        </th>
+                        <th>
+                          <textarea class="form-control form-control-sm" [(ngModel)]="t.comentarios" name="comentarios"
+                            cols="25" rows="1"></textarea>
+                        </th>
+                        <th>
+                          <button class="btn btn-danger" (click)="_tiempos.eliminar_activo(t._id)">-</button>
+                        </th>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Tab de Defectos -->
+        <div class="tab-pane fade" id="defectos" role="tabpanel" aria-labelledby="defectos-tab">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <button class="btn btn-info" (click)="_defectos.agregar_activo()">Agregar Defecto</button>
+                <button class="btn btn-success my-2 my-lg-0" (click)="guardarDefectos()">Guardar Defectos</button>
+              </div>
+              <div class="col-12">
+                <div class="table-responsive-sm">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Numero</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Encontrado</th>
+                        <th scope="col">Removido</th>
+                        <th scope="col">T. compostura</th>
+                        <th scope="col">Arregaldo</th>
+                        <th scope="col">Acción</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-template ngFor let-defecto [ngForOf]="_defectos.defectos_activos">
+                        <tr>
+                          <th scope="row">
+                            <input required class="form-control form-control-sm" [(ngModel)]="defecto.fecha"
+                              name="fecha" placeholder="Fecha..." type="date">
+                          </th>
+                          <th>
+                            {{defecto.numero}}
+                          </th>
+                          <th>
+                            <select class="custom-select" [(ngModel)]="defecto.tipo" name="tipo" required>
+                              <option selected>Seleccione uno</option>
+                              <option value="Documentacion">Documentacion</option>
+                              <option value="Sintaxis">Sintaxis</option>
+                              <option value="Contruccion empacar">Contruccion empacar</option>
+                              <option value="Asignacion">Asignacion</option>
+                              <option value="Interfaz">Interfaz</option>
+                              <option value="Chequeo">Chequeo</option>
+                              <option value="Datos">Datos</option>
+                              <option value="Funcion">Funcion</option>
+                              <option value="Sistema">Sistema</option>
+                              <option value="Ambiente">Ambiente</option>
+                            </select>
+                          </th>
+                          <th>
+                            <input required class="form-control form-control-sm"
+                              (blur)="calculaCompostura(defecto._id,defecto.encontrado,defecto.removido)"
+                              [(ngModel)]="defecto.encontrado" name="encontrado" placeholder="Encontrado..."
+                              type="time">
+                          </th>
+                          <th>
+                            <input required class="form-control form-control-sm"
+                              (blur)="calculaCompostura(defecto._id,defecto.encontrado,defecto.removido)"
+                              [(ngModel)]="defecto.removido" name="removido" placeholder="Removido..." type="time">
+                          </th>
+                          <th>
+                            {{defecto.tiempo_compostura}} min.
+                          </th>
+                          <th>
+                            <select class="custom-select" [(ngModel)]="defecto.defecto_arreglado"
+                              name="defecto_arreglado" required>
+                              <option selected>Seleccione uno</option>
+                              <option value="Si">Si</option>
+                              <option value="No">No</option>
+                            </select>
+                          </th>
+                          <th>
+                            <button class="btn btn-danger" (click)="_defectos.eliminar_activo(defecto._id)">-</button>
+                          </th>
+                        </tr>
+                        <tr>
+                          <th colspan="8">
+                            <textarea placeholder="Descripcion..." class="form-control form-control-sm"
+                              [(ngModel)]="defecto.descripcion" name="descripcion" cols="25" rows="1"></textarea>
+                          </th>
+                        </tr>
+
+                      </ng-template>
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Tab de resumen -->
+        <div class="tab-pane fade" id="resumen" role="tabpanel" aria-labelledby="resumen-tab">
+          <div class="row mt-3">
+            <div class="col-12 col-md-6">
+              <p class="pl-5">Estudiante: {{_proyectos.proyecto_activo.estudiante}} <br>
+                Programa: {{_proyectos.proyecto_activo.programa}} <br>
+                Instructor: {{_proyectos.proyecto_activo.instructor}}
+              </p>
+            </div>
+            <div class="col-12 col-md-6">
+              <p class="pl-5">Fecha: {{_proyectos.proyecto_activo.fecha}}<br>
+                # Programa: {{_proyectos.proyecto_activo.noPrograma}}<br>
+                Lenguaje: {{_proyectos.proyecto_activo.lenguaje}}</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 mb-4">
+              <div class="table-responsive-sm">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Tiempo en la face (min.)</th>
+                      <th scope="col">Real</th>
+                      <th scope="col">Desde la fecha</th>
+                      <th scope="col">Hasta la fecha</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let tiempo of _tiempos.tiempos_activos ">
+                      <th scope="row">
+                        {{tiempo.fase}}
+                      </th>
+                      <th>
+                        {{tiempo.tiempo_delta}} min.
+                      </th>
+                      <th>
+                        {{tiempo.inicio | date:'dd/MM/yyyy, HH:mm a'}}
+                      </th>
+                      <th>
+                        {{tiempo.termino | date:'dd/MM/yyyy, HH:mm a'}}
+                      </th>
+                    </tr>
+                    <tr>
+                      <th>
+                        Total -- Estimado {{_proyectos.proyecto_activo.estimado}}
+                      </th>
+                      <th>
+                        {{_tiempos.tiempos_activos|totalTiempo}} min.
+                      </th>
+                      <th colspan="2" class="text-center">
+                        {{_proyectos.proyecto_activo.fecha}}
+                      </th>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="col-12 mb-4">
+              <div class="table-responsive-sm">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Defectos inyectados</th>
+                      <th scope="col">Real</th>
+                      <th scope="col">Desde la fecha</th>
+                      <th scope="col">Hasta la fecha</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      *ngFor="let defecto of _defectos.defectos_activos | defectos:obtenerTipo('Planificacion'):obtenerTipo('Codificacion'):obtenerTipo('Diseño'):obtenerTipo('Compilacion'):obtenerTipo('Pruebas'):obtenerTipo('Posmortem')">
+                      <th scope="row">
+                        {{defecto.fase}}
+                      </th>
+                      <th>
+                        {{defecto.real}} min.
+                      </th>
+                      <th>
+                        {{defecto.inicio | date:'dd/MM/yyyy HH:mm'}}
+                      </th>
+                      <th>
+                        {{defecto.termino | date:'dd/MM/yyyy HH:mm'}}
+                      </th>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="col-12 mb-4">
+              <div class="table-responsive-sm">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Defectos arreglados</th>
+                      <th scope="col">Real</th>
+                      <th scope="col">Desde la fecha</th>
+                      <th scope="col">Hasta la fecha</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      *ngFor="let defecto of _defectos.defectos_activos | cuentaDefectosCorregidos:obtenerTipo('Planificacion'):obtenerTipo('Codificacion'):obtenerTipo('Diseño'):obtenerTipo('Compilacion'):obtenerTipo('Pruebas'):obtenerTipo('Posmortem')">
+                      <th scope="row">
+                        {{defecto.fase}}
+                      </th>
+                      <th>
+                        {{defecto.real}} min.
+                      </th>
+                      <th>
+                        {{defecto.inicio | date:'dd/MM/yyyy HH:mm'}}
+                      </th>
+                      <th>
+                        {{defecto.termino | date:'dd/MM/yyyy HH:mm'}}
+                      </th>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ng-template #noSeleccionado>
+      <div class="col-12 mt-5 text-center">
+        <h2>
+          Selecciona una plantilla
+        </h2>
+      </div>
+    </ng-template>
+  </div>
+</div>

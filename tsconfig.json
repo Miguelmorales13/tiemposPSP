@@ -17,7 +17,21 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "@services/*": [
+        "src/app/services/*"
+      ],
+      "@pipes/*": [
+        "src/app/pipes/*"
+      ],
+      "@models/*": [
+        "src/app/models/*"
+      ],
+      "@guards/*": [
+        "src/app/guards/*"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
